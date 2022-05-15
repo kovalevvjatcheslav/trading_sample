@@ -1,5 +1,8 @@
-from ticker import ticker
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
+
+from router import router
+from ticker import ticker
 
 
 app = FastAPI()
@@ -15,6 +18,6 @@ def shutdown_event():
     ticker.stop()
 
 
-@app.get("/")
-async def root():
-    return {"message": list(ticker.tickers_array)}
+app.include_router(router)
+
+app.mount("/static", StaticFiles(directory="static"), name="static")

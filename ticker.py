@@ -28,6 +28,8 @@ class Ticker:
         self.stop_flag.value = STOP
         self.process.join()
         self.process.close()
+        del self.tickers_array
+        del self.stop_flag
 
     @staticmethod
     def generate_movement():
