@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from router import router
-from ticker import ticker
 
 
 app = FastAPI()
