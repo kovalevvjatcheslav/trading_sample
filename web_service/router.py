@@ -19,12 +19,13 @@ async def root(request: Request):
 @router.websocket("/realtime_data")
 async def get_realtime(websocket: WebSocket):
     await websocket.accept()
-    redis_client = Redis(host='localhost', port=6379, db=0)
+    redis_client = Redis(host='redis', port=6379, db=0)
     while True:
         subscription = redis_client.pubsub()
         await subscription.subscribe("ticker_1")
         async for msg in subscription.listen():
-            try:
-                await websocket.send_json(json.dumps({"key": msg}))
-            except ConnectionClosedOK:
-                return
+            if msg.get("type") == "message":
+                try:
+                    await websocket.send_json(json.dumps({"key": msg["data"].decode("utf8")}))
+                except ConnectionClosedOK:
+                    return

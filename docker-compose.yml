@@ -1,0 +1,18 @@
+services:
+    redis:
+        image: redis:7.0.0-alpine
+        restart: on-failure
+    web:
+        image: web_service
+        ports:
+            - "${WEB_SERVICE_PORT}:${WEB_SERVICE_PORT}"
+        depends_on:
+            - redis
+        restart: on-failure
+        command: python -m main
+    ticker:
+        image: ticker
+        depends_on:
+            - redis
+        restart: on-failure
+        command: python -m ticker

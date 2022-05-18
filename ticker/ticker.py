@@ -2,21 +2,15 @@ import json
 from random import random
 
 from redis import Redis
+
 from celery import Celery
 
-app = Celery('tasks', broker='redis://localhost:6379/0')
-
-app.conf.beat_schedule = {
-    'ticker-task': {
-        'task': 'ticker.ticker_task',
-        'schedule': 5,
-    },
-}
+app = Celery('tasks', broker='redis://redis:6379/0')
 
 
 @app.task
 def ticker_task():
-    redis_client = Redis(host='localhost', port=6379, db=0)
+    redis_client = Redis(host='redis', port=6379, db=0)
     tickers = redis_client.get("tickers")
     if tickers is None:
         tickers = [0]*5
@@ -31,6 +25,13 @@ def ticker_task():
         redis_client.close()
 
 
+app.add_periodic_task(5, ticker_task, name="ticker-task")
+
+
 def generate_movement():
     movement = -1 if random() < 0.5 else 1
     return movement
+
+
+if __name__ == "__main__":
+    app.worker_main(argv=["worker", "-B"])

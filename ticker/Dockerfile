@@ -7,11 +7,9 @@ RUN pip install --target=/deps -r requirements.txt
 
 FROM python:3.10.4-slim
 
-WORKDIR service
+WORKDIR ticker
 
-ENV PYTHONPATH="/deps:/service:$PATH"
+ENV PYTHONPATH="/deps:/ticker:$PATH"
 
 COPY --from=builder /deps /deps
-COPY router.py main.py ./
-COPY templates templates
-COPY static static
+COPY ticker.py ./
