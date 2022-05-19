@@ -5,15 +5,15 @@ from redis import Redis
 
 from celery import Celery
 
-app = Celery('tasks', broker='redis://redis:6379/0')
+app = Celery("tasks", broker="redis://redis:6379/0")
 
 
 @app.task
 def ticker_task():
-    redis_client = Redis(host='redis', port=6379, db=0)
+    redis_client = Redis(host="redis", port=6379, db=0)
     tickers = redis_client.get("tickers")
     if tickers is None:
-        tickers = [0]*5
+        tickers = [0] * 5
     else:
         tickers = json.loads(tickers)
     try:
