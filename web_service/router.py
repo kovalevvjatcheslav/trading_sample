@@ -15,6 +15,7 @@ router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
+    # TODO: have to add tickers list to template
     print(await DataController.get_all_ticker_entries("ticker_1"))
     return template_processor.TemplateResponse("index.html", {"request": request})
 
@@ -22,6 +23,7 @@ async def root(request: Request):
 @router.websocket("/realtime_data")
 async def get_realtime(websocket: WebSocket):
     await websocket.accept()
+    # TODO: move retrieve data from redis into controller
     redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
     while True:
         subscription = redis_client.pubsub()

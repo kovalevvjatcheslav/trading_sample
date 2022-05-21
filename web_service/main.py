@@ -12,11 +12,7 @@ app = FastAPI()
 
 @app.on_event("startup")
 async def startup_event():
-    dsn = (
-        f"dbname={settings.POSTGRES_DB} user={settings.POSTGRES_USER} password={settings.POSTGRES_PASSWORD} "
-        f"host={settings.POSTGRES_HOST} port={settings.POSTGRES_PORT}"
-    )
-    await db.create_pool(dsn)
+    await db.create_pool()
     await db.create_table()
 
 

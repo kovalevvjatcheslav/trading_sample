@@ -1,11 +1,17 @@
 import aiopg
 
+from settings import settings
+
 
 class Db:
     def __init__(self):
         self.pool = None
 
-    async def create_pool(self, dsn):
+    async def create_pool(self):
+        dsn = (
+            f"dbname={settings.POSTGRES_DB} user={settings.POSTGRES_USER} password={settings.POSTGRES_PASSWORD} "
+            f"host={settings.POSTGRES_HOST} port={settings.POSTGRES_PORT}"
+        )
         self.pool = await aiopg.create_pool(dsn)
 
     async def create_table(self):
@@ -16,7 +22,7 @@ class Db:
                     "    id SERIAL PRIMARY KEY NOT NULL,"
                     "    ticker_name CHAR(50) NOT NULL,"
                     "    ticker_value INTEGER NOT NULL,"
-                    "    created timestamp NOT NULL"
+                    "    created_at TIMESTAMP DEFAULT Now() NOT NULL"
                     ")"
                 )
 

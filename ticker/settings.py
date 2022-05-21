@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_DB: str = "0"
 
+    TICKER_PERIOD: int = 5
+    NUMBER_OF_TICKERS: int = 5
+
     class Config:
         env_file = ".env"
 
