@@ -27,7 +27,6 @@ async def get_entries(ticker_name: str):
 @router.websocket("/realtime_data")
 async def get_realtime(websocket: WebSocket):
     await websocket.accept()
-    # TODO: move retrieve data from redis into controller
     redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
     channel = redis_client.pubsub()
     await channel.subscribe("ticker_1")
@@ -35,7 +34,7 @@ async def get_realtime(websocket: WebSocket):
         try:
             msg = await channel.get_message(ignore_subscribe_messages=True)
             if msg is not None:
-                await websocket.send_json({"ticker_1": msg["data"].decode("utf8")})
+                await websocket.send_json(msg["data"].decode("utf8"))
             await sleep(0.1)
         except (ConnectionClosedOK, exceptions.CancelledError):
             return
