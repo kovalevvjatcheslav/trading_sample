@@ -17,9 +17,11 @@ class DataController:
     def save_tickers(self, tickers):
         with connect(self.dsn) as con:
             with con.cursor() as cur:
-                execute_values(cur, "INSERT INTO data (ticker_name, ticker_value) VALUES %s", [(f"ticker_{i}", value) for i, value in enumerate(tickers)])
-
-
+                execute_values(
+                    cur,
+                    "INSERT INTO data (ticker_name, ticker_value) VALUES %s",
+                    [(f"ticker_{i}", value) for i, value in enumerate(tickers)],
+                )
 
 
 data_controller = DataController()

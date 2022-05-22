@@ -22,7 +22,7 @@ class Db:
                     "    id SERIAL PRIMARY KEY NOT NULL,"
                     "    ticker_name CHAR(50) NOT NULL,"
                     "    ticker_value INTEGER NOT NULL,"
-                    "    created_at TIMESTAMP DEFAULT Now() NOT NULL"
+                    "    created_at TIMESTAMPTZ DEFAULT Now() NOT NULL"
                     ")"
                 )
 

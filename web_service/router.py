@@ -1,4 +1,4 @@
-import json
+from asyncio import sleep, exceptions
 
 from fastapi import APIRouter, Request, WebSocket
 from fastapi.responses import HTMLResponse
@@ -16,8 +16,12 @@ router = APIRouter()
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
     # TODO: have to add tickers list to template
-    print(await DataController.get_all_ticker_entries("ticker_1"))
     return template_processor.TemplateResponse("index.html", {"request": request})
+
+
+@router.get("/ticker_entries/{ticker_name}")
+async def get_entries(ticker_name: str):
+    return await DataController.get_all_ticker_entries(ticker_name)
 
 
 @router.websocket("/realtime_data")
@@ -25,12 +29,13 @@ async def get_realtime(websocket: WebSocket):
     await websocket.accept()
     # TODO: move retrieve data from redis into controller
     redis_client = Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=settings.REDIS_DB)
+    channel = redis_client.pubsub()
+    await channel.subscribe("ticker_1")
     while True:
-        subscription = redis_client.pubsub()
-        await subscription.subscribe("ticker_1")
-        async for msg in subscription.listen():
-            if msg.get("type") == "message":
-                try:
-                    await websocket.send_json(json.dumps({"key": msg["data"].decode("utf8")}))
-                except ConnectionClosedOK:
-                    return
+        try:
+            msg = await channel.get_message(ignore_subscribe_messages=True)
+            if msg is not None:
+                await websocket.send_json({"ticker_1": msg["data"].decode("utf8")})
+            await sleep(0.1)
+        except (ConnectionClosedOK, exceptions.CancelledError):
+            return
