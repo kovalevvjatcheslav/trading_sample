@@ -26,7 +26,8 @@ class TestAPI(unittest.IsolatedAsyncioTestCase):
                 )
         await db.close_pool()
 
-    async def _add_ticker_data(self):
+    @staticmethod
+    async def _add_ticker_data():
         async with db.pool.acquire() as conn:
             async with conn.cursor() as cur:
                 await cur.execute(
@@ -46,7 +47,7 @@ class TestAPI(unittest.IsolatedAsyncioTestCase):
         await self._add_ticker_data()
         response = await self.http_client.get("/ticker_entries/ticker_0")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [[1, "1984-01-02T20:05:10"], [42, "2022-01-02T20:05:10"]])
+        self.assertEqual(response.json(), [[1, "1984-01-02T20:05:10+00:00"], [42, "2022-01-02T20:05:10+00:00"]])
 
     def test_get_realtime(self):
         ws_client = TestClient(app)
@@ -55,7 +56,7 @@ class TestAPI(unittest.IsolatedAsyncioTestCase):
             self.redis.publish("ticker_1", 42)
             data = websocket.receive_json()
             websocket.exit_stack.pop_all()
-        self.assertEqual(data, {"ticker_1": "42"})
+        self.assertEqual(data, "42")
 
 
 if __name__ == "__main__":

@@ -6,6 +6,11 @@
     <script src="{{ url_for('static', path='/main.js') }}" defer></script>
 </head>
 <body>
-
+    <label for="tickers_select">Tickers</label>
+    <select id="tickers_select">
+        {% for name in ticker_names %}
+        <option value="{{ name }}">{{ name }}</option>
+        {% endfor %}
+    </select>
 </body>
 </html>

@@ -15,8 +15,8 @@ router = APIRouter()
 
 @router.get("/", response_class=HTMLResponse)
 async def root(request: Request):
-    # TODO: have to add tickers list to template
-    return template_processor.TemplateResponse("index.html", {"request": request})
+    ticker_names = await DataController.get_ticker_names()
+    return template_processor.TemplateResponse("index.html", {"request": request, "ticker_names": ticker_names})
 
 
 @router.get("/ticker_entries/{ticker_name}")
@@ -36,5 +36,8 @@ async def get_realtime(websocket: WebSocket):
             if msg is not None:
                 await websocket.send_json(msg["data"].decode("utf8"))
             await sleep(0.1)
-        except (ConnectionClosedOK, exceptions.CancelledError):
+        except ConnectionClosedOK:
+            return
+        except exceptions.CancelledError:
+            await websocket.close()
             return
