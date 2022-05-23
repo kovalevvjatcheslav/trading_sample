@@ -4,7 +4,7 @@ import json
 from fastapi import APIRouter, Request, WebSocket
 from fastapi.responses import HTMLResponse
 from redis.asyncio import Redis
-from websockets.exceptions import ConnectionClosedOK
+from websockets.exceptions import ConnectionClosedOK, ConnectionClosedError
 
 from controller import DataController
 from settings import settings
@@ -38,8 +38,8 @@ async def get_realtime(ticker_name: str, websocket: WebSocket):
             msg = await channel.get_message(ignore_subscribe_messages=True)
             if msg is not None:
                 await websocket.send_json(json.loads(msg["data"]))
-            await sleep(0.1)
-        except ConnectionClosedOK:
+            await sleep(0.01)
+        except (ConnectionClosedOK, ConnectionClosedError):
             return
         except exceptions.CancelledError:
             await websocket.close()

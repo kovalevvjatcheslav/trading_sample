@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_DB: str = "0"
 
-    TICKER_PERIOD: int = 5
+    TICKER_PERIOD: float = 1
     NUMBER_OF_TICKERS: int = 5
 
     class Config:

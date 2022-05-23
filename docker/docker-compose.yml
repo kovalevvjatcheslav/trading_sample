@@ -2,32 +2,28 @@ services:
     redis:
         image: redis:7.0.0-alpine
         restart: on-failure
-        ports:
-            - "6379:6379"
     db:
         image: postgres:14.3-alpine
         restart: on-failure
         volumes:
             - ../database:/var/lib/postgresql/data
         env_file: .env
+    web:
+        image: web_service
         ports:
-            - "5432:5432"
-#    web:
-#        image: web_service
-#        ports:
-#            - "${WEB_SERVICE_PORT}:${WEB_SERVICE_PORT}"
-#        env_file: .env
-#        depends_on:
-#            - redis
-#            - db
-#        restart: on-failure
-#        command: python -m main
-#    ticker:
-#        image: ticker
-#        env_file: .env
-#        depends_on:
-#            - redis
-#            - db
-##            - web
-#        restart: on-failure
-#        command: python -m ticker
+            - "${WEB_SERVICE_PORT}:${WEB_SERVICE_PORT}"
+        env_file: .env
+        depends_on:
+            - redis
+            - db
+        restart: on-failure
+        command: python -m main
+    ticker:
+        image: ticker
+        env_file: .env
+        depends_on:
+            - redis
+            - db
+            - web
+        restart: on-failure
+        command: python -m ticker

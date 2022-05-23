@@ -42,7 +42,8 @@ class DataController(AbstractContextManager):
                         "INNER JOIN data mx ON mx.created_at = d.max_created_at AND mx.ticker_name = d.ticker_name"
                     )
                     tickers = {
-                        ticker_name: (created_at, ticker_value) for ticker_name, created_at, ticker_value in cur.fetchall()
+                        ticker_name: (created_at, ticker_value)
+                        for ticker_name, created_at, ticker_value in cur.fetchall()
                     }
         else:
             tickers = json.loads(tickers)
@@ -57,7 +58,10 @@ class DataController(AbstractContextManager):
                 execute_values(
                     cur,
                     "INSERT INTO data (ticker_name, created_at, ticker_value) VALUES %s",
-                    [(ticker_name, ticker_data[0], ticker_data[1]) for ticker_name, ticker_data in tickers.items()],
+                    [
+                        (ticker_name, ticker_data[0], ticker_data[1])
+                        for ticker_name, ticker_data in tickers.items()
+                    ],
                 )
         self.redis.set("tickers", json.dumps(tickers, cls=DateTimeEncoder))
 

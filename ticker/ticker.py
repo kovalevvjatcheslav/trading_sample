@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from random import random
 
 from celery import Celery
@@ -16,7 +16,10 @@ def ticker_task():
     with DataController() as controller:
         tickers = controller.get_last_tickers_values()
         for ticker_name in tickers.keys():
-            tickers[ticker_name] = (datetime.utcnow(), tickers[ticker_name][1] + generate_movement())
+            tickers[ticker_name] = (
+                datetime.now(tz=timezone.utc),
+                tickers[ticker_name][1] + generate_movement(),
+            )
         controller.save_tickers(tickers)
         controller.publish(tickers)
 
