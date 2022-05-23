@@ -48,17 +48,17 @@ class TestAPI(unittest.IsolatedAsyncioTestCase):
         response = await self.http_client.get("/ticker_entries/ticker_0")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            response.json(), [[1, "1984-01-02T20:05:10+00:00"], [42, "2022-01-02T20:05:10+00:00"]]
+            response.json(), [["1984-01-02T20:05:10+00:00", 1], ["2022-01-02T20:05:10+00:00", 42]]
         )
 
     def test_get_realtime(self):
         ws_client = TestClient(app)
-        with ws_client.websocket_connect("/realtime_data") as websocket:
+        with ws_client.websocket_connect("/realtime_data/ticker_1") as websocket:
             sleep(1)
             self.redis.publish("ticker_1", 42)
             data = websocket.receive_json()
             websocket.exit_stack.pop_all()
-        self.assertEqual(data, "42")
+        self.assertEqual(data, 42)
 
 
 if __name__ == "__main__":
