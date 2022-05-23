@@ -10,8 +10,10 @@ Deprecated==1.2.13
 kombu==5.2.4
 packaging==21.3
 prompt-toolkit==3.0.29
+psycopg2-binary==2.9.3
 pydantic==1.9.1
 pyparsing==3.0.9
+python-dotenv==0.20.0
 pytz==2022.1
 redis==4.3.1
 six==1.16.0

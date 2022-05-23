@@ -47,7 +47,9 @@ class TestAPI(unittest.IsolatedAsyncioTestCase):
         await self._add_ticker_data()
         response = await self.http_client.get("/ticker_entries/ticker_0")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json(), [[1, "1984-01-02T20:05:10+00:00"], [42, "2022-01-02T20:05:10+00:00"]])
+        self.assertEqual(
+            response.json(), [[1, "1984-01-02T20:05:10+00:00"], [42, "2022-01-02T20:05:10+00:00"]]
+        )
 
     def test_get_realtime(self):
         ws_client = TestClient(app)

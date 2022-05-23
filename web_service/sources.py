@@ -9,8 +9,9 @@ class Db:
 
     async def create_pool(self):
         dsn = (
-            f"dbname={settings.POSTGRES_DB} user={settings.POSTGRES_USER} password={settings.POSTGRES_PASSWORD} "
-            f"host={settings.POSTGRES_HOST} port={settings.POSTGRES_PORT}"
+            f"dbname={settings.POSTGRES_DB} user={settings.POSTGRES_USER} "
+            f"password={settings.POSTGRES_PASSWORD} host={settings.POSTGRES_HOST} "
+            f"port={settings.POSTGRES_PORT}"
         )
         self.pool = await aiopg.create_pool(dsn)
 

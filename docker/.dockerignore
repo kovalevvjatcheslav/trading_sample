@@ -5,3 +5,4 @@ requirements_dev.txt
 .idea
 database
 celerybeat-schedule*
+test*

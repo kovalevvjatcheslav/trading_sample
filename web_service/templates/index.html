@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Пыщщщ</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="{{ url_for('static', path='/main.js') }}" defer></script>
 </head>
 <body>
@@ -12,5 +13,6 @@
         <option value="{{ name }}">{{ name }}</option>
         {% endfor %}
     </select>
+    <div id="chart_div"></div>
 </body>
 </html>

@@ -1,3 +1,4 @@
+from datetime import datetime
 from random import random
 
 from celery import Celery
@@ -5,7 +6,9 @@ from celery import Celery
 from controller import DataController
 from settings import settings
 
-app = Celery("tasks", broker=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}")
+app = Celery(
+    "tasks", broker=f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}/{settings.REDIS_DB}"
+)
 
 
 @app.task
@@ -13,7 +16,7 @@ def ticker_task():
     with DataController() as controller:
         tickers = controller.get_last_tickers_values()
         for ticker_name in tickers.keys():
-            tickers[ticker_name] += generate_movement()
+            tickers[ticker_name] = (datetime.utcnow(), tickers[ticker_name][1] + generate_movement())
         controller.save_tickers(tickers)
         controller.publish(tickers)
 

@@ -7,7 +7,7 @@ class DataController:
         async with db.pool.acquire() as conn:
             async with conn.cursor() as cur:
                 await cur.execute(
-                    "SELECT ticker_value, created_at FROM data WHERE ticker_name = %s ORDER BY created_at",
+                    "SELECT created_at, ticker_value  FROM data WHERE ticker_name = %s ORDER BY created_at",
                     (ticker_name,),
                 )
                 return await cur.fetchall()

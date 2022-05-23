@@ -1,1 +1,1 @@
-# trading_sample
+docker build --no-cache -f docker/ticker.dockerfile -t ticker .

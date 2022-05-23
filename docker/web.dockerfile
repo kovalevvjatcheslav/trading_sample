@@ -12,4 +12,5 @@ WORKDIR service
 ENV PYTHONPATH="/deps:/service:$PATH"
 
 COPY --from=builder /deps /deps
+COPY docker/.env ./
 COPY web_service ./
