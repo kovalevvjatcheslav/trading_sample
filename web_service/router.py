@@ -18,7 +18,11 @@ router = APIRouter()
 async def root(request: Request):
     ticker_names = await DataController.get_ticker_names()
     return template_processor.TemplateResponse(
-        "index.html", {"request": request, "ticker_names": ticker_names}
+        "index.html",
+        {
+            "request": request,
+            "ticker_names": sorted(ticker_names, key=lambda item: int(item.split("_")[1])),
+        },
     )
 
 

@@ -16,7 +16,5 @@ class DataController:
     async def get_ticker_names():
         async with db.pool.acquire() as conn:
             async with conn.cursor() as cur:
-                await cur.execute(
-                    "SELECT ticker_name FROM data GROUP BY ticker_name ORDER BY ticker_name"
-                )
+                await cur.execute("SELECT ticker_name FROM data GROUP BY ticker_name")
                 return [i[0].strip() for i in await cur.fetchall()]
